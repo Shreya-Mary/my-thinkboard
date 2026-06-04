@@ -1,12 +1,19 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import path from "path"; // 1. Import the built-in path module
 import notesRoutes from "./routes/notesRoutes.js";
 import { connectDB } from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
+import authRoutes from "./routes/authRoutes.js";
 
-dotenv.config();
+
+console.log("=== ENV DEBUG LOGS ===");
+console.log("Current working directory:", process.cwd());
+console.log("Is JWT_SECRET found?:", !!process.env.JWT_SECRET);
+console.log("Is UPSTASH URL found?:", !!process.env.UPSTASH_REDIS_REST_URL);
+console.log("=======================");
 
 const app = express();
 const PORT = process.env.PORT || 5001;
@@ -18,6 +25,7 @@ app.use(express.json()); // Parses incoming JSON payloads
 
 // Routes 
 app.use("/api/notes", notesRoutes);
+app.use("/api/auth", authRoutes);
 
 // 2. PRODUCTION SERVING LOGIC
 const __dirname = path.resolve();
